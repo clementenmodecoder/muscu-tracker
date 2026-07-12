@@ -6,6 +6,14 @@ Application web de suivi de séance de musculation — **100 % hors-ligne**, don
 
 Fonctions : programme du jour, timers de repos auto (son + vibration), log des séries, suivi de progression, double progression. Conçu pour un usage sur téléphone en salle.
 
+## v3.1 — app installable (PWA) + tutos vidéo
+
+- **Lien « Tuto » sur chaque exercice** (cartes de séance + programme) : ouvre une recherche YouTube de la technique du mouvement
+- **PWA installable** : « Ajouter à l'écran d'accueil » → l'app s'ouvre en plein écran et fonctionne **entièrement hors-ligne** (service worker + manifest + icônes)
+- Journal des dernières séances (date, durée, volume, séries), delta de volume vs semaine passée
+- Appui long sur les boutons −/+ des séries pour incrémenter en continu
+- Focus clavier visibles, neutres légèrement réchauffés
+
 ## v3 — design « blanc premium »
 
 - Thème blanc pur, typographie **Inter** + **Space Grotesk** (embarquées dans `assets/fonts/`)
@@ -17,7 +25,9 @@ Fonctions : programme du jour, timers de repos auto (son + vibration), log des s
 ## Structure
 
 - `index.html` — l'app complète (logique + UI)
+- `manifest.webmanifest` + `sw.js` — installation PWA & hors-ligne
 - `assets/fonts/` — Inter variable & Space Grotesk variable (woff2, sous-ensembles latin)
 - `assets/three.module.min.js` + `assets/three.core.min.js` + `assets/room-env.js` — three.js r171 (MIT), servi en local pour rester hors-ligne
+- `assets/icon-*.png` — icônes d'app (192/512/180)
 
-La 3D nécessite d'être servi en HTTP(S) (GitHub Pages ✓) — en ouverture directe `file://`, l'app fonctionne, seule la 3D est désactivée.
+La 3D et le mode hors-ligne nécessitent d'être servis en HTTP(S) (GitHub Pages ✓) — en ouverture directe `file://`, l'app fonctionne, seule la 3D est désactivée.

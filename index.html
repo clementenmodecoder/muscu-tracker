@@ -9,6 +9,8 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="description" content="Tracker de séance de musculation — 100% hors-ligne, données locales.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230b0b0e'/%3E%3Cg stroke='%23ff4d00' stroke-width='9' stroke-linecap='round' fill='none'%3E%3Cpath d='M30 30v40M70 30v40M17 40v20M83 40v20M30 50h40'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
 <link rel="preload" href="assets/fonts/inter-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/space-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <title>Muscu Tracker</title>
@@ -21,14 +23,14 @@
 
   :root{
     /* ---- Design tokens · v3 · blanc premium ---- */
-    --bg:#ffffff; --bg2:#f7f7f8; --bg3:#efeff1;
-    --ink:#0b0b0e; --ink2:#54545e; --mut:#9b9ba4;
-    --hair:#ebebee; --hair2:#dfdfe3;
+    --bg:#ffffff; --bg2:#f8f7f6; --bg3:#f0efed;
+    --ink:#0b0b0e; --ink2:#575551; --mut:#9c9a96;
+    --hair:#eceae7; --hair2:#e0deda;
     --acc:#ff4d00; --acc-d:#d93f00; --acc-soft:#fff3ec;
     --ok:#0ca154; --ok-d:#077a3d; --ok-soft:#e9f8f0; --ok-hair:#bfe8d2;
     --amber:#c97b00; --amber-soft:#fcf4e4;
     --red:#e5484d; --red-hair:#f6c8ca;
-    --chart-de:#e6e6ea; --grid:#f1f1f4; --baseline:#dcdce0;
+    --chart-de:#e7e5e2; --grid:#f2f1ef; --baseline:#dedcd8;
     /* muscles — palette catégorielle validée (CVD-safe, ≥3:1 sur blanc) */
     --m-chest:#d64545; --m-back:#2a78d6; --m-delts:#c97b00; --m-rear:#d0549b;
     --m-arms-tri:#7a4fd6; --m-arms-bi:#0f9f8f; --m-legs:#4a9d23; --m-core:#96801f; --m-cuff:#0e9bc0;
@@ -104,6 +106,25 @@
   .chip{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--hair2);border-radius:999px;padding:5px 11px;
     font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--ink2);background:var(--bg);}
   .chip-acc{background:var(--acc-soft);border-color:#ffd9c4;color:var(--acc-d);}
+  :focus-visible{outline:2px solid var(--acc);outline-offset:2px;}
+
+  /* lien tuto YouTube */
+  .chip-yt{padding:4px 10px;font-size:10px;gap:5px;color:var(--ink2);text-decoration:none;margin-left:auto;}
+  .chip-yt svg{color:var(--red);}
+  .chip-yt:active{transform:scale(.95);background:var(--bg2);}
+  .ytmini{display:inline-flex;align-items:center;vertical-align:-3px;margin-left:6px;padding:2px;text-decoration:none;}
+  .ytmini svg{color:var(--red);opacity:.8;}
+
+  /* journal des séances */
+  .jrow{display:flex;align-items:center;gap:11px;padding:11px 15px;border-bottom:1px solid var(--hair);}
+  .jrow:last-child{border-bottom:none;}
+  .jdot{width:4px;height:34px;border-radius:3px;flex:none;}
+  .jmain{flex:1;min-width:0;}
+  .jname{display:block;font-weight:700;font-size:13.5px;letter-spacing:-.01em;}
+  .jsub{display:block;font-size:11px;color:var(--mut);font-weight:600;margin-top:1px;text-transform:capitalize;}
+  .jright{text-align:right;flex:none;}
+  .jright b{display:block;font-family:var(--f-disp);font-size:13.5px;font-weight:700;font-variant-numeric:tabular-nums;}
+  .jright .jsets{font-size:10px;color:var(--mut);font-weight:700;}
 
   /* ================= HERO ================= */
   .hero{position:relative;background:var(--bg) radial-gradient(150px 150px at 84% 18%,#fff0e7,transparent 72%);
@@ -192,7 +213,7 @@
   .ex-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
   .ex-muscle{font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;margin-bottom:4px;display:flex;align-items:center;gap:6px;}
   .warn-badge{color:var(--amber);}
-  .ex-title{font-weight:700;font-size:16px;letter-spacing:-.01em;line-height:1.25;}
+  .ex-title{font-family:var(--f-disp);font-weight:600;font-size:16px;letter-spacing:-.005em;line-height:1.25;}
   .ex-title .opt{font-size:9.5px;font-weight:800;color:var(--mut);background:var(--bg2);border:1px solid var(--hair);padding:2px 7px;border-radius:6px;margin-left:6px;vertical-align:2px;text-transform:uppercase;letter-spacing:.05em;}
   .ex-prog{font-family:var(--f-disp);font-variant-numeric:tabular-nums;font-weight:700;font-size:12.5px;color:var(--ink2);
     border:1px solid var(--hair2);border-radius:99px;padding:5px 11px;white-space:nowrap;flex:none;}
@@ -213,7 +234,8 @@
     font-family:var(--f-disp);font-weight:700;font-size:12.5px;color:var(--ink2);}
   .set-row.done .set-num{background:var(--ok);color:#fff;}
   .field{display:flex;align-items:center;background:var(--bg);border-radius:10px;overflow:hidden;border:1px solid var(--hair2);}
-  .field .step{width:26px;height:40px;border:none;background:transparent;color:var(--mut);font-size:18px;font-weight:600;cursor:pointer;flex:none;font-family:var(--f-ui);}
+  .field .step{width:26px;height:40px;border:none;background:transparent;color:var(--mut);font-size:18px;font-weight:600;cursor:pointer;flex:none;font-family:var(--f-ui);
+    user-select:none;-webkit-user-select:none;touch-action:manipulation;}
   .field .step:active{background:var(--bg2);color:var(--acc-d);}
   .field .val{width:100%;min-width:0;border:none;background:transparent;color:var(--ink);text-align:center;
     font-family:var(--f-disp);font-size:15px;font-weight:600;padding:10px 0;font-variant-numeric:tabular-nums;}
@@ -429,7 +451,8 @@ var IC={
   upload:'<path d="M12 21V9M7 14l5-5 5 5M4 3h16"/>',
   refresh:'<path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/>',
   trash:'<path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M6 6l1 14a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-14"/>',
-  alert:'<path d="M12 3 2 20h20z"/><path d="M12 9v5M12 17.2v.3"/>'
+  alert:'<path d="M12 3 2 20h20z"/><path d="M12 9v5M12 17.2v.3"/>',
+  video:'<rect x="2" y="5.5" width="20" height="13" rx="3.5"/><polygon points="10 9.3 15 12 10 14.7" fill="currentColor" stroke="none"/>'
 };
 function icon(n,s,sw){return '<svg class="i" width="'+(s||20)+'" height="'+(s||20)+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="'+(sw||1.9)+'" stroke-linecap="round" stroke-linejoin="round">'+IC[n]+'</svg>';}
 
@@ -549,6 +572,8 @@ function weekStreak(){
   return streak;
 }
 function estMin(s){var t=0;s.ex.forEach(function(e){if(!e.optional)t+=e.sets*(e.rest+45);});return Math.round(t/60/5)*5;}
+function ytURL(e){var q=e.name.replace(/\(.*?\)/g,' ').replace(/\s+/g,' ').trim()+' technique musculation';
+  return 'https://www.youtube.com/results?search_query='+encodeURIComponent(q);}
 
 function lastPerf(exId){for(var i=state.history.length-1;i>=0;i--){var h=state.history[i],arr=h.logs[exId];if(arr){var done=arr.filter(function(s){return s.done&&String(s.r)!=='';});if(done.length)return {date:h.dateISO,sets:done};}}return null;}
 function histFor(exId){var out=[];state.history.forEach(function(h){var arr=h.logs[exId];if(arr){var done=arr.filter(function(s){return s.done&&String(s.r)!=='';});if(done.length)out.push({date:h.dateISO,sets:done});}});return out;}
@@ -789,7 +814,8 @@ function exCard(e,logs){
      '<div class="ex-title">'+esc(e.name)+(e.optional?'<span class="opt">option</span>':'')+'</div></div>';
   h+='<div class="ex-prog '+(full?'full':'')+'">'+done+'/'+logs.length+'</div></div>';
   h+='<div class="ex-meta">'+e.sets+' × '+e.repMin+'-'+e.repMax+unit+' · '+esc(e.load)+' · repos '+fmtTime(e.rest)+'</div>';
-  h+='<div class="ex-prev">'+esc(prev)+(ready?' <span class="progress-badge">↑ prêt à monter</span>':'')+'</div>';
+  h+='<div class="ex-prev">'+esc(prev)+(ready?' <span class="progress-badge">↑ prêt à monter</span>':'')+
+     '<a class="chip chip-yt" href="'+ytURL(e)+'" target="_blank" rel="noopener noreferrer" aria-label="Voir un tutoriel YouTube pour cet exercice">'+icon('video',12,2)+'Tuto</a></div>';
   h+='<div class="set-labels"><span>#</span><span>'+(e.unit==='s'?'charge':'kg')+'</span><span>'+(e.unit==='s'?'sec':'reps')+'</span><span>RIR</span><span></span></div>';
   h+='<div class="sets">';
   logs.forEach(function(s,i){h+=setRow(e,i,s);});
@@ -897,6 +923,19 @@ function viewProgress(){
     '<div class="stat"><div class="l">Volume total</div><div class="v"><span data-count="'+Math.round(totVol)+'" data-cfmt="k">'+fmtK(totVol)+'</span></div><div class="s">kg soulevés</div></div></div>';
   if(!hist.length)return h+'<div class="card center muted" style="margin-top:14px">Aucune séance enregistrée.<br>Termine ta 1ʳᵉ séance pour voir ta progression.</div>';
 
+  /* Journal des dernières séances */
+  h+='<h2>Dernières séances</h2><div class="card" style="padding:4px 0;overflow:hidden">';
+  hist.slice(-6).reverse().forEach(function(en){
+    var s=SESSMAP[en.sessionId];if(!s)return;
+    var vol=Math.round(histVol(en)),ns=0;
+    Object.keys(en.logs).forEach(function(k){en.logs[k].forEach(function(st){if(st.done)ns++;});});
+    var dlab=new Date(en.dateISO+'T12:00').toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'});
+    h+='<div class="jrow"><span class="jdot" style="background:'+s.color+'"></span>'+
+      '<span class="jmain"><span class="jname">'+esc(s.name)+'</span><span class="jsub">'+dlab+(en.durationSec?' · '+fmtTime(en.durationSec):'')+'</span></span>'+
+      '<span class="jright"><b>'+frNum(vol)+' kg</b><span class="jsets">'+ns+' séries</span></span></div>';
+  });
+  h+='</div>';
+
   /* 8 dernières semaines */
   var ws=weekStartISO(todayISO()),weeks=[];
   for(var i=7;i>=0;i--)weeks.push(addDaysISO(ws,-7*i));
@@ -907,8 +946,13 @@ function viewProgress(){
   h+='<h2>Assiduité</h2><div class="card chart-card"><div class="ct">Séances par semaine</div>'+
     '<div class="cs">8 dernières semaines · semaine en cours en orange</div>'+
     barChart(sessItems,{goal:stats.goal,intScale:true,fmt:function(v){return frNum(v);}})+'</div>';
+  var curV=volItems[volItems.length-1].v,prevV=volItems[volItems.length-2].v,volDelta='';
+  if(prevV>0&&curV>0){
+    var dv=Math.round((curV-prevV)/prevV*100);
+    if(dv!==0)volDelta=' · <span style="color:'+(dv>0?'var(--ok-d)':'var(--amber)')+';font-weight:800">'+(dv>0?'▲ +'+dv:'▼ '+dv)+' % vs sem. passée</span>';
+  }
   h+='<div class="card chart-card"><div class="ct">Volume par semaine</div>'+
-    '<div class="cs">kg soulevés (charge × reps, séries validées)</div>'+
+    '<div class="cs">kg soulevés (charge × reps)'+volDelta+'</div>'+
     barChart(volItems)+'</div>';
 
   /* Répartition par muscle — cette semaine */
@@ -977,7 +1021,9 @@ function viewProgram(){
   PROGRAM.sessions.forEach(function(s){
     h+='<h2><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:'+s.color+'"></span>'+esc(s.name)+'</h2>';
     h+='<div class="card prog-sess"><div class="muted small" style="margin-bottom:6px">'+esc(s.focus)+' · ~'+estMin(s)+' min</div>';
-    s.ex.forEach(function(e){h+='<div class="ex-line"><span class="n">'+(e.shoulder?'⚠ ':'')+esc(e.name)+(e.optional?' (opt)':'')+'</span><span class="d">'+e.sets+'×'+e.repMin+'-'+e.repMax+(e.unit==='s'?'s':'')+'<br>'+esc(e.load)+' · '+fmtTime(e.rest)+'</span></div>';});
+    s.ex.forEach(function(e){h+='<div class="ex-line"><span class="n">'+(e.shoulder?'⚠ ':'')+esc(e.name)+(e.optional?' (opt)':'')+
+      '<a class="ytmini" href="'+ytURL(e)+'" target="_blank" rel="noopener noreferrer" aria-label="Voir un tutoriel YouTube">'+icon('video',14,1.8)+'</a></span>'+
+      '<span class="d">'+e.sets+'×'+e.repMin+'-'+e.repMax+(e.unit==='s'?'s':'')+'<br>'+esc(e.load)+' · '+fmtTime(e.rest)+'</span></div>';});
     h+='</div>';
   });
   h+='<h2>Progression 4 semaines</h2><div class="card info-block"><table class="ptable"><tr><th>Sem.</th><th>Effort</th><th>Consigne</th></tr>';
@@ -1008,12 +1054,13 @@ function viewSettings(){
   h+='<h2>Mes données</h2><div class="card">'+
     '<button class="btn btn-ghost btn-block" data-action="export">'+icon('download',17,2)+'Exporter (sauvegarde JSON)</button>'+
     '<button class="btn btn-ghost btn-block" style="margin-top:9px" data-action="import">'+icon('upload',17,2)+'Importer une sauvegarde</button>'+
-    '<p class="muted small" style="margin:11px 0 0">Tes données sont stockées sur cet appareil/navigateur uniquement. Exporte régulièrement pour ne rien perdre.</p></div>';
+    '<p class="muted small" style="margin:11px 0 0">Tes données sont stockées sur cet appareil/navigateur uniquement. Exporte régulièrement pour ne rien perdre.</p>'+
+    '<p class="muted small" style="margin:9px 0 0">Astuce : dans le menu du navigateur, choisis « Ajouter à l’écran d’accueil » — l’app s’ouvre alors en plein écran et fonctionne hors-ligne.</p></div>';
   h+='<h2>Zone risquée</h2><div class="card">'+
     '<button class="btn btn-ghost btn-block" data-action="reset-block">'+icon('refresh',17,2)+'Recommencer le bloc (→ S1)</button>'+
     '<button class="btn btn-danger btn-block" style="margin-top:9px" data-action="clear-history">'+icon('trash',17,2)+'Effacer l’historique</button>'+
     '<button class="btn btn-danger btn-block" style="margin-top:9px" data-action="reset-app">'+icon('alert',17,2)+'Tout réinitialiser</button></div>';
-  h+='<p class="muted small center" style="margin:18px 0 4px">Muscu Tracker · données locales · v3</p>';
+  h+='<p class="muted small center" style="margin:18px 0 4px">Muscu Tracker · données locales · v3.1</p>';
   return h;
 }
 function toggleRow(label,key,on){return '<div class="set-toggle"><span>'+label+'</span><button class="switch '+(on?'on':'')+'" data-action="toggle-setting" data-key="'+key+'"></button></div>';}
@@ -1111,6 +1158,28 @@ document.addEventListener('click',function(e){
   }else tipEl.classList.remove('show');
 });
 
+/* steppers : clic simple + auto-répétition à l'appui long (utile pour monter les charges) */
+var Rep={t:null,iv:null,fired:false,el:null};
+function doStep(btn){
+  var row=btn.closest('.set-row'),card=btn.closest('.ex-card');if(!row||!card)return;
+  var exId=card.dataset.ex,i=+row.dataset.set,f=btn.dataset.field,step=+btn.dataset.step;
+  var inp=row.querySelector('.val[data-field="'+f+'"]');if(!inp)return;
+  var v=num(inp.value)+step;if(v<0)v=0;if(f!=='w')v=Math.round(v);v=+v.toFixed(2);
+  inp.value=(v===0&&f==='w')?'':String(v);
+  if(state.activeWorkout&&state.activeWorkout.logs[exId]&&state.activeWorkout.logs[exId][i])state.activeWorkout.logs[exId][i][f]=inp.value;
+  saveSoon();
+}
+function stopRep(){clearTimeout(Rep.t);clearInterval(Rep.iv);Rep.t=null;Rep.iv=null;}
+document.addEventListener('pointerdown',function(e){
+  var st=e.target.closest('.step');if(!st)return;
+  Rep.fired=false;Rep.el=st;stopRep();
+  Rep.t=setTimeout(function(){Rep.iv=setInterval(function(){Rep.fired=true;doStep(st);},90);},420);
+});
+document.addEventListener('pointerup',stopRep);
+document.addEventListener('pointercancel',stopRep);
+window.addEventListener('blur',stopRep);
+document.addEventListener('contextmenu',function(e){if(e.target.closest('.step'))e.preventDefault();});
+
 document.addEventListener('click',function(e){
   resumeAudio();
   var tab=e.target.closest('[data-tab]');
@@ -1118,10 +1187,8 @@ document.addEventListener('click',function(e){
   var a=e.target.closest('[data-action]');if(!a)return;
   var act=a.dataset.action;
   if(act==='step'){
-    var row=a.closest('.set-row'),card=a.closest('.ex-card'),exId=card.dataset.ex,i=+row.dataset.set,f=a.dataset.field,step=+a.dataset.step;
-    var inp=row.querySelector('.val[data-field="'+f+'"]');var v=num(inp.value)+step;if(v<0)v=0;if(f!=='w')v=Math.round(v);v=+v.toFixed(2);
-    inp.value=(v===0&&f==='w')?'':String(v);
-    if(state.activeWorkout&&state.activeWorkout.logs[exId])state.activeWorkout.logs[exId][i][f]=inp.value;saveSoon();return;
+    if(Rep.fired&&Rep.el===a){Rep.fired=false;return;} /* l'appui long a déjà incrémenté */
+    doStep(a);return;
   }
   if(act==='toggle-set'){
     var row2=a.closest('.set-row'),card2=a.closest('.ex-card'),exId2=card2.dataset.ex,i2=+row2.dataset.set;
@@ -1198,6 +1265,10 @@ Array.prototype.forEach.call(document.querySelectorAll('.ic-wrap'),function(el){
 $('#tbToggle').innerHTML=icon('pause',15,2.4);
 render();
 if(state.activeWorkout)requestWake();
+/* PWA : hors-ligne + installable (jamais sur les pages de test) */
+if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')&&/(index\.html|\/)$/.test(location.pathname)){
+  navigator.serviceWorker.register('./sw.js').catch(function(){});
+}
 })();
 </script>
 
