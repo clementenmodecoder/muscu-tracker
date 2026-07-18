@@ -6,6 +6,13 @@ Application web de suivi de séance de musculation — **100 % hors-ligne**, don
 
 Fonctions : programme du jour, timers de repos auto (son + vibration), log des séries, suivi de progression, double progression. Conçu pour un usage sur téléphone en salle.
 
+## v3.2 — poids corporel, journal interactif, durées corrigeables
+
+- **Tracker de poids corporel** : relevés en 2 taps, courbe de tendance, delta sur ~1 mois, historique avec suppression
+- **Jours de la semaine cliquables** sur l'accueil : détail de la séance du jour choisi, ou ce qui est prévu au programme
+- **Chaque séance du journal s'ouvre en détail** : stats, séries réalisées par exercice, **durée corrigeable** (si tu as oublié d'arrêter la séance) et suppression possible — raccourci « Corriger la durée » aussi dans l'écran de fin
+- Journal complet (« Voir tout l'historique »)
+
 ## v3.1 — app installable (PWA) + tutos vidéo
 
 - **Lien « Tuto » sur chaque exercice** (cartes de séance + programme) : ouvre une recherche YouTube de la technique du mouvement
