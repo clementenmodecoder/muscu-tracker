@@ -6,6 +6,13 @@ Application web de suivi de séance de musculation — **100 % hors-ligne**, don
 
 Fonctions : programme du jour, timers de repos auto (son + vibration), log des séries, suivi de progression, double progression. Conçu pour un usage sur téléphone en salle.
 
+## v4.0 — flow de séance « qualité commerciale »
+
+- Zéro re-rendu pendant la séance : cocher/ajouter une série met à jour uniquement ce qui change (aucun flash, aucun saut)
+- Quick-nav sticky : une pastille par exercice (✓ vert terminé, anneau orange = en cours), tap pour y aller
+- Les exercices terminés se replient, scroll automatique vers le suivant, champ sélectionné au focus
+- Programme v3 : split 3 j 100 % haut du corps (jambes couvertes par le skate), protections épaule conservées
+
 ## v3.2 — poids corporel, journal interactif, durées corrigeables
 
 - **Tracker de poids corporel** : relevés en 2 taps, courbe de tendance, delta sur ~1 mois, historique avec suppression
