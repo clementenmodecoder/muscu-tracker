@@ -481,7 +481,7 @@ var IC={
 };
 function icon(n,s,sw){return '<svg class="i" width="'+(s||20)+'" height="'+(s||20)+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="'+(sw||1.9)+'" stroke-linecap="round" stroke-linejoin="round">'+IC[n]+'</svg>';}
 
-/* ============ PROGRAMME (v2, basé sur la deep research) ============ */
+/* ============ PROGRAMME (v3 — 100 % haut du corps, épaule-safe ; jambes couvertes par le skate) ============ */
 function ex(o){return Object.assign({sets:3,repMin:8,repMax:12,unit:'reps',load:'RIR 3',rest:90,cue:'',shoulder:false,prehab:false,optional:false,amp:'',warn:''},o);}
 var CUFF=ex({id:'cuff',name:'Rotation externe poulie + serviette',muscle:'cuff',sets:2,repMin:15,repMax:15,load:'2-4 kg',rest:45,prehab:true,shoulder:true,
   cue:'Coiffe : recentre la tête humérale (objectif n°1 de ton épaule).',
@@ -504,22 +504,23 @@ var PROGRAM={
       ex({id:'a_facepull',name:'Face pull',muscle:'rear',sets:2,repMin:15,repMax:20,load:'léger',rest:60,shoulder:true,
         cue:'Deltoïde post. + coiffe (santé épaule).',amp:'Tire au niveau du front, coudes hauts, rotation externe.',warn:'Éviter les à-coups / l’hyperextension arrière.'}),
     ]},
-    {id:'pull',day:3,name:'Tirage + Jambes',focus:'Dos · Biceps · Jambes (MV) · Coiffe',color:'var(--m-back)',ex:[
+    {id:'pull',day:3,name:'Haut B — Tirage',focus:'Dos · Trapèzes · Biceps · Core',color:'var(--m-back)',ex:[
       cuff('p'),
       ex({id:'p_pulldown',name:'Lat pulldown prise neutre (pause iso 1-2s)',muscle:'back',sets:3,repMin:8,repMax:12,rest:150,
         cue:'Dos ; pause iso en bas = phase 1 progression traction.'}),
       ex({id:'p_row',name:'Chest-supported row (banc 45°)',muscle:'back',sets:3,repMin:10,repMax:12,rest:120,cue:'Dos épais/rhomboïdes ; appui sternal = 0 triche lombaire.'}),
-      ex({id:'p_legpress',name:'Presse à cuisses',muscle:'legs',sets:3,repMin:10,repMax:12,load:'60-80 kg',rest:120,cue:'Quads/fessiers — volume de maintien (MV).'}),
-      ex({id:'p_legcurl',name:'Leg curl',muscle:'legs',sets:2,repMin:10,repMax:12,rest:90,cue:'Ischios — équilibre du genou.'}),
+      ex({id:'p_shrug',name:'Shrugs haltères',muscle:'back',sets:3,repMin:12,repMax:15,load:'14-20 kg/main',rest:75,
+        cue:'Trapèzes supérieurs — hausse les épaules, pause 1s en haut, descente contrôlée. Des trapèzes forts stabilisent aussi l’épaule.'}),
       ex({id:'p_curl',name:'Curl biceps haltères',muscle:'arms-bi',sets:3,repMin:10,repMax:12,load:'8-10 kg',rest:90,cue:'Biceps, fort rendement.'}),
-      ex({id:'p_calf',name:'Mollets',muscle:'legs',sets:3,repMin:15,repMax:20,rest:60,cue:'Faible fatigue systémique.'}),
+      ex({id:'p_hammer',name:'Curl marteau',muscle:'arms-bi',sets:2,repMin:12,repMax:15,load:'8-10 kg',rest:75,cue:'Brachial + avant-bras — épaissit le bras.'}),
+      ex({id:'p_plank',name:'Gainage planche',muscle:'core',sets:3,repMin:30,repMax:45,unit:'s',load:'PdC',rest:60,cue:'Core anti-extension — transfert direct sur le skate.'}),
       ex({id:'p_yt',name:'Prone Y-T (banc incliné)',muscle:'rear',sets:2,repMin:12,repMax:15,load:'léger',rest:60,optional:true,shoulder:true,
         cue:'Trapèze inférieur / rhomboïdes (option santé scapulaire).',amp:'Mouvement court et contrôlé, omoplates qui descendent.',warn:'Pas de cambrure lombaire ; charge légère.'}),
     ]},
-    {id:'hautB',day:5,name:'Haut B — Tirage/Épaules',focus:'Pecs (2e dose) · Dos · Delt post. · Bras',color:'var(--m-cuff)',ex:[
+    {id:'hautB',day:5,name:'Haut C — Mixte',focus:'Pecs (2e dose) · Dos · Delt post. · Bras',color:'var(--m-cuff)',ex:[
       cuff('b'),
-      ex({id:'b_press',name:'Machine convergente chest press (≤30°)',muscle:'chest',sets:3,repMin:8,repMax:12,rest:120,
-        cue:'Pecs ; axe convergent = pic de contraction, sûr. Inclinaison ≤ 30°.'}),
+      ex({id:'b_press',name:'Machine convergente chest press (≤30°)',muscle:'chest',sets:4,repMin:8,repMax:12,rest:120,
+        cue:'Pecs ; axe convergent = pic de contraction, sûr. Inclinaison ≤ 30°. 2e dose hebdo → 8 séries directes de pecs/sem.'}),
       ex({id:'b_pull',name:'Lat pulldown neutre (pause iso) ou seated row',muscle:'back',sets:3,repMin:8,repMax:12,rest:120,cue:'Dos.'}),
       ex({id:'b_reardelt',name:'Reverse pec deck (oiseau)',muscle:'rear',sets:3,repMin:12,repMax:15,load:'léger-modéré',rest:90,shoulder:true,
         cue:'Deltoïde postérieur — priorité santé épaule.',amp:'Jusqu’à l’alignement bras-tronc. NE PAS dépasser derrière le corps.',warn:'Douleur/instabilité en fin de course → réduis l’amplitude.'}),
@@ -527,6 +528,7 @@ var PROGRAM={
         cue:'Deltoïde latéral, plan scapulaire.',amp:'≤ 90°, bras 30° en avant, pouces légèrement hauts.',warn:'Pincement au sommet → baisse hauteur + charge.'}),
       ex({id:'b_curl',name:'Curl incliné / câble',muscle:'arms-bi',sets:3,repMin:10,repMax:12,rest:90,cue:'Biceps, 2e dose hebdo.'}),
       ex({id:'b_pushdown',name:'Extension triceps poulie (corde)',muscle:'arms-tri',sets:3,repMin:10,repMax:15,rest:90,cue:'Triceps, 2e dose hebdo.'}),
+      ex({id:'b_legraise',name:'Relevés de jambes',muscle:'core',sets:3,repMin:12,repMax:15,load:'PdC',rest:60,optional:true,cue:'Abdos bas — 2e dose core (option si le temps).'}),
     ]},
     {id:'bras',day:0,name:'Bras + Core (option)',focus:'Bras · Core · Coiffe — 0 épaule lourde',color:'var(--m-arms-tri)',optional:true,ex:[
       cuff('x'),
@@ -543,11 +545,13 @@ var PROGRAM={
     1:{label:'S1 — Adaptation',rir:'RIR 3',note:'Technique avant tout, établis tes charges de base. Excentrique 2-4s, zéro élan.'},
     2:{label:'S2 — Accumulation',rir:'RIR 2-3',note:'Mêmes charges qu’en S1, gagne des répétitions vers le haut de la fourchette.'},
     3:{label:'S3 — Accumulation',rir:'RIR 2-3',note:'Vise le HAUT de la fourchette sur TOUTES les séries, technique propre.'},
-    4:{label:'S4 — Incrément',rir:'RIR 2-3 (épaules : 3)',note:'Haut de fourchette atteint partout → +charge (haut +1-2,5 kg · jambes +2,5-5 · épaules +0,5-1 kg ou reps).'}
+    4:{label:'S4 — Incrément',rir:'RIR 2-3 (épaules : 3)',note:'Haut de fourchette atteint partout → +charge (pecs/dos +1-2,5 kg · épaules/bras +0,5-1 kg ou reps).'}
   }
 };
 var EXMAP={},SESSMAP={};
 PROGRAM.sessions.forEach(function(s){SESSMAP[s.id]=s;s.ex.forEach(function(e){EXMAP[e.id]=e;});});
+/* exercices retirés du programme (ex-jambes) : noms conservés pour l'affichage de l'historique */
+var LEGACY_EX={p_legpress:'Presse à cuisses',p_legcurl:'Leg curl',p_calf:'Mollets'};
 var MUSCLES={chest:'Pecs',back:'Dos',delts:'Épaules',rear:'Delt. post.','arms-tri':'Triceps','arms-bi':'Biceps',legs:'Jambes',core:'Core',cuff:'Coiffe'};
 var MAIN_SESSIONS=['hautA','pull','hautB'];
 
@@ -1076,7 +1080,7 @@ function progCard(id){
 
 /* ===== PROGRAM REF ===== */
 function viewProgram(){
-  var h='<div class="banner" style="margin-top:14px"><span class="ic">'+icon('clipboard',16,2)+'</span><span>Ton programme complet (référence). Split 3 j : <b>Haut / Tirage+Jambes / Haut</b> — chaque muscle ≥ 2×/sem, 48h entre sollicitations d’épaule, ≤ 6 séries/muscle/séance.</span></div>';
+  var h='<div class="banner" style="margin-top:14px"><span class="ic">'+icon('clipboard',16,2)+'</span><span>Ton programme complet (référence). Split 3 j <b>100 % haut du corps</b> : Poussée / Tirage / Mixte — chaque muscle ≥ 2×/sem, 48h entre sollicitations d’épaule, ≤ 6 séries/muscle/séance. Les jambes, c’est le skate qui s’en charge.</span></div>';
   PROGRAM.sessions.forEach(function(s){
     h+='<h2><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:'+s.color+'"></span>'+esc(s.name)+'</h2>';
     h+='<div class="card prog-sess"><div class="muted small" style="margin-bottom:6px">'+esc(s.focus)+' · ~'+estMin(s)+' min</div>';
@@ -1087,7 +1091,7 @@ function viewProgram(){
   });
   h+='<h2>Progression 4 semaines</h2><div class="card info-block"><table class="ptable"><tr><th>Sem.</th><th>Effort</th><th>Consigne</th></tr>';
   [1,2,3,4].forEach(function(n){var w=PROGRAM.weeks[n];h+='<tr><td><b>S'+n+'</b></td><td>'+esc(w.rir)+'</td><td>'+esc(w.note)+'</td></tr>';});
-  h+='</table><p><b>Double progression :</b> garde la charge tant que tu n’as pas atteint le haut de la fourchette sur TOUTES les séries en technique propre. Ensuite seulement : +charge (haut +1-2,5 kg · jambes +2,5-5 · épaules +0,5-1 kg ou reps). Épaule : jamais sacrifier l’amplitude pour du poids.</p></div>';
+  h+='</table><p><b>Double progression :</b> garde la charge tant que tu n’as pas atteint le haut de la fourchette sur TOUTES les séries en technique propre. Ensuite seulement : +charge (pecs/dos +1-2,5 kg · épaules/bras +0,5-1 kg ou reps). Épaule : jamais sacrifier l’amplitude pour du poids.</p></div>';
   h+='<h2>Tractions — progression clinique</h2><div class="card info-block"><ul>'+
     '<li><b>S1-4 (maintenant) :</b> lat pulldown prise neutre + pause iso 1-2s.</li>'+
     '<li><b>S5-8 :</b> excentriques lents 3-4s.</li>'+
@@ -1119,7 +1123,7 @@ function viewSettings(){
     '<button class="btn btn-ghost btn-block" data-action="reset-block">'+icon('refresh',17,2)+'Recommencer le bloc (→ S1)</button>'+
     '<button class="btn btn-danger btn-block" style="margin-top:9px" data-action="clear-history">'+icon('trash',17,2)+'Effacer l’historique</button>'+
     '<button class="btn btn-danger btn-block" style="margin-top:9px" data-action="reset-app">'+icon('alert',17,2)+'Tout réinitialiser</button></div>';
-  h+='<p class="muted small center" style="margin:18px 0 4px">Muscu Tracker · données locales · v3.2</p>';
+  h+='<p class="muted small center" style="margin:18px 0 4px">Muscu Tracker · données locales · v3.3</p>';
   return h;
 }
 function toggleRow(label,key,on){return '<div class="set-toggle"><span>'+label+'</span><button class="switch '+(on?'on':'')+'" data-action="toggle-setting" data-key="'+key+'"></button></div>';}
@@ -1148,13 +1152,19 @@ function showSummary(d){
 }
 function sessionModal(en){
   var s=SESSMAP[en.sessionId];if(!s)return;
-  var vol=Math.round(histVol(en)),ns=0,exH='';
-  s.ex.forEach(function(e){
-    var arr=(en.logs[e.id]||[]).filter(function(st){return st.done;});
+  var vol=Math.round(histVol(en)),ns=0,exH='',seen={};
+  function exLine(id,name,unit){
+    var arr=(en.logs[id]||[]).filter(function(st){return st.done;});
     if(!arr.length)return;
     ns+=arr.length;
-    var setsTxt=arr.map(function(st){return (num(st.w)>0?st.w+'×':'')+st.r+(e.unit==='s'?'s':'');}).join('  ');
-    exH+='<div class="sm-ex"><span class="n">'+esc(e.name)+'</span><span class="s">'+esc(setsTxt)+'</span></div>';
+    var setsTxt=arr.map(function(st){return (num(st.w)>0?st.w+'×':'')+st.r+(unit==='s'?'s':'');}).join('  ');
+    exH+='<div class="sm-ex"><span class="n">'+esc(name)+'</span><span class="s">'+esc(setsTxt)+'</span></div>';
+  }
+  s.ex.forEach(function(e){seen[e.id]=1;exLine(e.id,e.name,e.unit);});
+  Object.keys(en.logs).forEach(function(k){
+    if(seen[k])return;
+    var e=EXMAP[k];
+    exLine(k,e?e.name:(LEGACY_EX[k]||k),e?e.unit:'reps');
   });
   var dlab=new Date(en.dateISO+'T12:00').toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
   var mins=Math.max(1,Math.round((en.durationSec||0)/60));
