@@ -1,7 +1,7 @@
 /* Muscu Tracker — service worker : app installable + 100 % hors-ligne.
    Navigations : réseau d'abord (pour récupérer les mises à jour), cache en secours.
    Assets : cache d'abord (fontes, three.js, icônes ne changent presque jamais). */
-var CACHE = 'muscu-v4.1.0';
+var CACHE = 'muscu-v4.2.0';
 var ASSETS = [
   './',
   './index.html',

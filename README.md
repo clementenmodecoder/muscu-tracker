@@ -6,6 +6,13 @@ Application web de suivi de séance de musculation — **100 % hors-ligne**, don
 
 Fonctions : programme du jour, timers de repos auto (son + vibration), log des séries, suivi de progression, double progression. Conçu pour un usage sur téléphone en salle.
 
+## v4.2 — corriger un exercice terminé + gainage de fin de séance
+
+- **Un exercice terminé se rouvre depuis n'importe où sur la carte** (avant, seul le titre réagissait : taper la ligne de charges ou « Dernière fois… » ne faisait rien). Chevron + mention « Toucher pour corriger » pour que ce soit visible, et le lien Tuto garde son comportement.
+- **La pastille verte de la quick-nav rouvre l'exercice** au lieu d'y faire défiler une carte repliée.
+- **Finisher « Gainage planche (1 min) »** à la fin des 4 séances — 1 série de 60 s, sans timer de repos.
+- Affichage nettoyé : `1 × 60s` au lieu de `1 × 60-60s`, plus de « repos 00:00 ».
+
 ## v4.1 — programme ajusté (zéro poids de corps, zéro gainage)
 
 - **Lundi (Haut A)** : Push-Up Plus et Développé épaules machine retirés → **Landmine press** (poussée à 45°, pas d'overhead, travaille aussi le dentelé antérieur) et **Écarté poulie basse→haut** (2ᵉ dose de pecs en étirement chargé)

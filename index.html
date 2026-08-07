@@ -252,7 +252,17 @@
   .ex-card{position:relative;background:var(--bg);border:1px solid var(--hair);border-radius:var(--r);
     margin-bottom:12px;overflow:hidden;box-shadow:var(--sh);transition:opacity .3s;scroll-margin-top:118px;}
   .ex-card.card-done{opacity:.72;}
-  .ex-card.card-done .ex-head{cursor:pointer;}
+  .ex-card.card-done .ex-top{cursor:pointer;-webkit-tap-highlight-color:rgba(255,77,0,.12);}
+  .ex-card.card-done .ex-top:active{background:var(--bg2);}
+  .ex-top{border-radius:10px;margin:-4px;padding:4px;}
+  .ex-headr{display:flex;align-items:center;gap:6px;flex:none;}
+  .ex-chev{display:none;color:var(--acc);transform:rotate(90deg);transition:transform .3s var(--spring);}
+  .ex-card.card-done .ex-chev{display:flex;}
+  .ex-card.card-done.force-open .ex-chev{transform:rotate(-90deg);}
+  .ex-edit-hint{display:none;color:var(--acc);font-weight:800;}
+  .ex-card.card-done .ex-edit-hint{display:inline;}
+  .ex-card.card-done .ex-edit-hint::before{content:' · ';color:var(--mut);font-weight:600;}
+  .ex-card.card-done.force-open .ex-edit-hint{display:none;}
   .ex-fold{display:grid;grid-template-rows:1fr;transition:grid-template-rows .4s var(--spring);}
   .ex-fold-in{overflow:hidden;min-height:0;}
   .ex-card.card-done .ex-fold{grid-template-rows:0fr;}
@@ -518,6 +528,10 @@ var CUFF=ex({id:'cuff',name:'Rotation externe poulie + serviette',muscle:'cuff',
   cue:'Coiffe : recentre la tête humérale (objectif n°1 de ton épaule).',
   amp:'Coude collé au flanc (serviette = 20-30° d’abduction), rotation 45-60°.',warn:'Doit rester indolore. Toute douleur → allège.'});
 function cuff(idp){var c=Object.assign({},CUFF);c.id=idp+'_cuff';return c;}
+/* finisher : 1 minute de gainage pour clore chaque séance */
+var PLANK=ex({id:'plank',name:'Gainage planche (1 min)',muscle:'core',sets:1,repMin:60,repMax:60,unit:'s',load:'PdC',rest:0,
+  cue:'Finisher de fin de séance : 1 minute de gainage. Core anti-extension — bassin en rétroversion, fessiers serrés, pas de creux lombaire. Transfert direct sur le skate.'});
+function plank(idp){var p=Object.assign({},PLANK);p.id=idp+'_plank60';return p;}
 
 var PROGRAM={
   sessions:[
@@ -538,6 +552,7 @@ var PROGRAM={
       ex({id:'a_pushdown',name:'Extension triceps poulie',muscle:'arms-tri',sets:3,repMin:10,repMax:15,rest:90,cue:'Triceps, 0 stress gléno-huméral.'}),
       ex({id:'a_facepull',name:'Face pull',muscle:'rear',sets:2,repMin:15,repMax:20,load:'léger',rest:60,shoulder:true,
         cue:'Deltoïde post. + coiffe (santé épaule).',amp:'Tire au niveau du front, coudes hauts, rotation externe.',warn:'Éviter les à-coups / l’hyperextension arrière.'}),
+      plank('a'),
     ]},
     {id:'pull',day:3,name:'Haut B — Tirage',focus:'Dos · Trapèzes · Biceps',color:'var(--m-back)',ex:[
       cuff('p'),
@@ -550,6 +565,7 @@ var PROGRAM={
         cue:'Trapèzes supérieurs — hausse les épaules, pause 1s en haut, descente contrôlée. Des trapèzes forts stabilisent aussi l’épaule.'}),
       ex({id:'p_curl',name:'Curl biceps haltères',muscle:'arms-bi',sets:3,repMin:10,repMax:12,load:'8-10 kg',rest:90,cue:'Biceps, fort rendement.'}),
       ex({id:'p_hammer',name:'Curl marteau',muscle:'arms-bi',sets:2,repMin:12,repMax:15,load:'8-10 kg',rest:75,cue:'Brachial + avant-bras — épaissit le bras.'}),
+      plank('p'),
     ]},
     {id:'hautB',day:5,name:'Haut C — Mixte',focus:'Pecs (2e dose) · Dos · Delt post. · Bras',color:'var(--m-cuff)',ex:[
       cuff('b'),
@@ -563,6 +579,7 @@ var PROGRAM={
       ex({id:'b_curl',name:'Curl incliné / câble',muscle:'arms-bi',sets:3,repMin:10,repMax:12,rest:90,cue:'Biceps, 2e dose hebdo.'}),
       ex({id:'b_pushdown',name:'Extension triceps poulie (corde)',muscle:'arms-tri',sets:3,repMin:10,repMax:15,rest:90,cue:'Triceps, 2e dose hebdo.'}),
       ex({id:'b_legraise',name:'Relevés de jambes',muscle:'core',sets:3,repMin:12,repMax:15,load:'PdC',rest:60,optional:true,cue:'Abdos bas — 2e dose core (option si le temps).'}),
+      plank('b'),
     ]},
     {id:'bras',day:0,name:'Bras + Core (option)',focus:'Bras · Core · Coiffe — 0 épaule lourde',color:'var(--m-arms-tri)',optional:true,ex:[
       cuff('x'),
@@ -572,6 +589,7 @@ var PROGRAM={
       ex({id:'x_facepull',name:'Face pull',muscle:'rear',sets:3,repMin:15,repMax:20,load:'léger',rest:60,shoulder:true,
         cue:'Coiffe / deltoïde post.',amp:'Au front, coudes hauts, rotation externe.',warn:'Pas d’à-coups.'}),
       ex({id:'x_legraise',name:'Relevés de jambes',muscle:'core',sets:3,repMin:12,repMax:15,load:'PdC',rest:60,cue:'Abdos bas.'}),
+      plank('x'),
     ]},
   ],
   weeks:{
@@ -886,13 +904,18 @@ function exCard(e,logs){
   }else prev='Première fois — note tes charges';
   var notesOpen=!!(state.ui.notes&&state.ui.notes[e.id]);
   var h='<div class="ex-card '+(full?'card-done':'')+'" data-ex="'+e.id+'"><div class="ex-bar" style="background:'+color+'"></div><div class="ex-body">';
-  h+='<div class="ex-head" data-action="toggle-fold"><div>'+
+  /* .ex-top entier cliquable : replier / rouvrir un exercice terminé depuis n'importe où */
+  h+='<div class="ex-top" data-action="toggle-fold"'+(full?' role="button" tabindex="0" aria-label="'+esc(e.name)+' — ouvrir pour corriger"':'')+'>';
+  h+='<div class="ex-head"><div>'+
      '<div class="ex-muscle" style="color:'+color+'">'+esc(MUSCLES[e.muscle]||e.muscle)+(e.shoulder?' <span class="warn-badge">'+icon('alert',11,2.2)+' épaule</span>':'')+'</div>'+
      '<div class="ex-title">'+esc(e.name)+(e.optional?'<span class="opt">option</span>':'')+'</div></div>';
-  h+='<div class="ex-prog '+(full?'full':'')+'">'+done+'/'+logs.length+'</div></div>';
-  h+='<div class="ex-meta">'+e.sets+' × '+e.repMin+'-'+e.repMax+unit+' · '+esc(e.load)+' · repos '+fmtTime(e.rest)+'</div>';
+  h+='<div class="ex-headr"><div class="ex-prog '+(full?'full':'')+'">'+done+'/'+logs.length+'</div>'+
+     '<span class="ex-chev" aria-hidden="true">'+icon('chevron',16,2.4)+'</span></div></div>';
+  var repTxt=(e.repMin===e.repMax?e.repMax:e.repMin+'-'+e.repMax)+unit;
+  h+='<div class="ex-meta">'+e.sets+' × '+repTxt+' · '+esc(e.load)+(e.rest>0?' · repos '+fmtTime(e.rest):'')+'<span class="ex-edit-hint">Toucher pour corriger</span></div>';
   h+='<div class="ex-prev">'+esc(prev)+(ready?' <span class="progress-badge">↑ prêt à monter</span>':'')+
      '<a class="chip chip-yt" href="'+ytURL(e)+'" target="_blank" rel="noopener noreferrer" aria-label="Voir un tutoriel YouTube pour cet exercice">'+icon('video',12,2)+'Tuto</a></div>';
+  h+='</div>';
   h+='<div class="ex-fold"><div class="ex-fold-in">';
   h+='<div class="set-labels"><span>#</span><span>'+(e.unit==='s'?'charge':'kg')+'</span><span>'+(e.unit==='s'?'sec':'reps')+'</span><span data-tip="RIR = reps en réserve. 2 = tu aurais pu en faire 2 de plus.">RIR ?</span><span></span></div>';
   h+='<div class="sets">';
@@ -1136,7 +1159,7 @@ function viewProgram(){
     h+='<div class="card prog-sess"><div class="muted small" style="margin-bottom:6px">'+esc(s.focus)+' · ~'+estMin(s)+' min</div>';
     s.ex.forEach(function(e){h+='<div class="ex-line"><span class="n">'+(e.shoulder?'⚠ ':'')+esc(e.name)+(e.optional?' (opt)':'')+
       '<a class="ytmini" href="'+ytURL(e)+'" target="_blank" rel="noopener noreferrer" aria-label="Voir un tutoriel YouTube">'+icon('video',14,1.8)+'</a></span>'+
-      '<span class="d">'+e.sets+'×'+e.repMin+'-'+e.repMax+(e.unit==='s'?'s':'')+'<br>'+esc(e.load)+' · '+fmtTime(e.rest)+'</span></div>';});
+      '<span class="d">'+e.sets+'×'+(e.repMin===e.repMax?e.repMax:e.repMin+'-'+e.repMax)+(e.unit==='s'?'s':'')+'<br>'+esc(e.load)+(e.rest>0?' · '+fmtTime(e.rest):'')+'</span></div>';});
     h+='</div>';
   });
   h+='<h2>Progression 4 semaines</h2><div class="card info-block"><table class="ptable"><tr><th>Sem.</th><th>Effort</th><th>Consigne</th></tr>';
@@ -1349,6 +1372,13 @@ function patchWorkout(exId){
     if(pill){pill.textContent=c.d+'/'+c.t;pill.classList.toggle('full',full);}
     card.classList.toggle('card-done',full);
     if(!full)card.classList.remove('force-open');
+    /* la zone repliable ne devient focusable que lorsqu'il y a quelque chose à replier */
+    var top=card.querySelector('.ex-top');
+    if(top){
+      if(full){top.setAttribute('role','button');top.setAttribute('tabindex','0');
+        top.setAttribute('aria-label',((EXMAP[exId]||{}).name||'')+' — ouvrir pour corriger');}
+      else{top.removeAttribute('role');top.removeAttribute('tabindex');top.removeAttribute('aria-label');}
+    }
   }
   var dot=document.querySelector('.exnav-dot[data-ex="'+exId+'"]');
   if(dot){dot.classList.toggle('done',full);dot.innerHTML=full?icon('check',13,3):dot.dataset.idx;}
@@ -1401,6 +1431,14 @@ document.addEventListener('pointercancel',stopRep);
 window.addEventListener('blur',stopRep);
 document.addEventListener('contextmenu',function(e){if(e.target.closest('.step'))e.preventDefault();});
 
+/* Entrée / Espace sur la zone repliable d'un exercice terminé */
+document.addEventListener('keydown',function(e){
+  if(e.key!=='Enter'&&e.key!==' ')return;
+  var top=e.target.closest&&e.target.closest('.ex-top[role="button"]');
+  if(!top)return;
+  e.preventDefault();top.click();
+});
+
 document.addEventListener('click',function(e){
   resumeAudio();
   var tab=e.target.closest('[data-tab]');
@@ -1419,7 +1457,7 @@ document.addEventListener('click',function(e){
     row2.classList.toggle('done',s.done);
     var becameFull=patchWorkout(exId2);
     if(s.done){
-      var ex2=EXMAP[exId2];startTimer(ex2.rest,ex2.name);doVibrate([25]);
+      var ex2=EXMAP[exId2];if(ex2.rest>0)startTimer(ex2.rest,ex2.name);doVibrate([25]);
       if(becameFull&&!REDUCED)setTimeout(function(){
         var nxt=document.querySelector('.ex-card:not(.card-done)')||document.querySelector('.finish-zone');
         if(nxt)nxt.scrollIntoView({behavior:'smooth',block:'start'});
@@ -1439,10 +1477,15 @@ document.addEventListener('click',function(e){
   }
   if(act==='jump-ex'){
     var jc=document.querySelector('.ex-card[data-ex="'+a.dataset.ex+'"]');
-    if(jc)jc.scrollIntoView({behavior:REDUCED?'auto':'smooth',block:'start'});
+    if(jc){
+      /* un exercice déjà terminé s'ouvre quand on y saute, sinon il n'y a rien à corriger */
+      if(jc.classList.contains('card-done'))jc.classList.add('force-open');
+      jc.scrollIntoView({behavior:REDUCED?'auto':'smooth',block:'start'});
+    }
     return;
   }
   if(act==='toggle-fold'){
+    if(e.target.closest('a'))return; /* le lien Tuto garde son comportement */
     var fc=a.closest('.ex-card');
     if(fc&&fc.classList.contains('card-done'))fc.classList.toggle('force-open');
     return;
