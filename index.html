@@ -523,35 +523,38 @@ var PROGRAM={
   sessions:[
     {id:'hautA',day:1,name:'Haut A — Poussée',focus:'Pecs · Épaules · Triceps',color:'var(--m-chest)',ex:[
       cuff('a'),
-      ex({id:'a_pushupplus',name:'Push-Up Plus',muscle:'cuff',sets:2,repMin:10,repMax:12,load:'PdC',rest:60,prehab:true,shoulder:true,
-        cue:'Dentelé antérieur → anti-winging, stabilité scapulaire.',amp:'En haut, protracte (éloigne bien les omoplates).',warn:'Pas de décollement d’omoplate (winging).'}),
       ex({id:'a_floor',name:'DB Floor Press',muscle:'chest',sets:4,repMin:8,repMax:12,load:'12 kg/main',rest:150,shoulder:true,
         cue:'Pecs ; le sol stoppe l’extension d’épaule = anti-translation antérieure.',amp:'Coudes s’arrêtent au sol, jamais sous le torse.',warn:'Douleur antérieure / sensation de glissement → stop.'}),
-      ex({id:'a_ohp',name:'Développé épaules machine (prise neutre)',muscle:'delts',sets:3,repMin:10,repMax:12,rest:120,shoulder:true,
-        cue:'Deltoïdes ; machine = trajectoire guidée, sûre en solo.',amp:'Du niveau clavicule (butée) à quasi-extension. Prise neutre.',warn:'Clic/clunk, instabilité, appréhension en bas → stop.'}),
+      ex({id:'a_landmine',name:'Landmine press (barre en coin)',muscle:'delts',sets:3,repMin:8,repMax:12,rest:120,shoulder:true,
+        cue:'Deltoïdes ; poussée à 45° = pas de vrai overhead, la barre suit le plan scapulaire. Bonus : le dentelé antérieur travaille à fond en fin de poussée (ce que faisait le Push-Up Plus).',
+        amp:'Départ épaule/clavicule, pousse en avant-haut à ~45°, finis bras tendu en éloignant l’omoplate. Une main à la fois ou les deux.',
+        warn:'Reste gainé, pas de cambrure lombaire pour aider. Douleur antérieure ou appréhension → baisse l’angle et la charge.'}),
+      ex({id:'a_fly',name:'Écarté poulie basse→haut',muscle:'chest',sets:3,repMin:12,repMax:15,rest:90,shoulder:true,
+        cue:'2e dose de pecs du jour, en étirement chargé et tension constante — très rentable pour l’hypertrophie.',
+        amp:'Coudes légèrement fléchis et FIXES ; mains qui se rejoignent devant, à hauteur de poitrine/menton.',
+        warn:'En bas, ne laisse pas les mains partir derrière le plan du torse (étirement passif de la capsule).'}),
       ex({id:'a_scaption',name:'Scaption haltères (30°)',muscle:'delts',sets:3,repMin:12,repMax:15,load:'5-7 kg',rest:90,shoulder:true,
         cue:'Deltoïde latéral dans le plan scapulaire.',amp:'≤ 90°, bras 30° en avant du plan frontal, pouces légèrement hauts.',warn:'Pincement au sommet → baisse hauteur + charge.'}),
       ex({id:'a_pushdown',name:'Extension triceps poulie',muscle:'arms-tri',sets:3,repMin:10,repMax:15,rest:90,cue:'Triceps, 0 stress gléno-huméral.'}),
       ex({id:'a_facepull',name:'Face pull',muscle:'rear',sets:2,repMin:15,repMax:20,load:'léger',rest:60,shoulder:true,
         cue:'Deltoïde post. + coiffe (santé épaule).',amp:'Tire au niveau du front, coudes hauts, rotation externe.',warn:'Éviter les à-coups / l’hyperextension arrière.'}),
     ]},
-    {id:'pull',day:3,name:'Haut B — Tirage',focus:'Dos · Trapèzes · Biceps · Core',color:'var(--m-back)',ex:[
+    {id:'pull',day:3,name:'Haut B — Tirage',focus:'Dos · Trapèzes · Biceps',color:'var(--m-back)',ex:[
       cuff('p'),
       ex({id:'p_pulldown',name:'Lat pulldown prise neutre (pause iso 1-2s)',muscle:'back',sets:3,repMin:8,repMax:12,rest:150,
         cue:'Dos ; pause iso en bas = phase 1 progression traction.'}),
       ex({id:'p_row',name:'Chest-supported row (banc 45°)',muscle:'back',sets:3,repMin:10,repMax:12,rest:120,cue:'Dos épais/rhomboïdes ; appui sternal = 0 triche lombaire.'}),
+      ex({id:'p_pullover',name:'Straight-arm pulldown (tirage bras tendus)',muscle:'back',sets:3,repMin:12,repMax:15,rest:90,
+        cue:'Grand dorsal en isolation, sans les biceps : il finit le dos quand les tirages sont limités par la prise. Bras quasi tendus, tire la barre/corde jusqu’aux cuisses, pause 1s en bas.'}),
       ex({id:'p_shrug',name:'Shrugs haltères',muscle:'back',sets:3,repMin:12,repMax:15,load:'14-20 kg/main',rest:75,
         cue:'Trapèzes supérieurs — hausse les épaules, pause 1s en haut, descente contrôlée. Des trapèzes forts stabilisent aussi l’épaule.'}),
       ex({id:'p_curl',name:'Curl biceps haltères',muscle:'arms-bi',sets:3,repMin:10,repMax:12,load:'8-10 kg',rest:90,cue:'Biceps, fort rendement.'}),
       ex({id:'p_hammer',name:'Curl marteau',muscle:'arms-bi',sets:2,repMin:12,repMax:15,load:'8-10 kg',rest:75,cue:'Brachial + avant-bras — épaissit le bras.'}),
-      ex({id:'p_plank',name:'Gainage planche',muscle:'core',sets:3,repMin:30,repMax:45,unit:'s',load:'PdC',rest:60,cue:'Core anti-extension — transfert direct sur le skate.'}),
-      ex({id:'p_yt',name:'Prone Y-T (banc incliné)',muscle:'rear',sets:2,repMin:12,repMax:15,load:'léger',rest:60,optional:true,shoulder:true,
-        cue:'Trapèze inférieur / rhomboïdes (option santé scapulaire).',amp:'Mouvement court et contrôlé, omoplates qui descendent.',warn:'Pas de cambrure lombaire ; charge légère.'}),
     ]},
     {id:'hautB',day:5,name:'Haut C — Mixte',focus:'Pecs (2e dose) · Dos · Delt post. · Bras',color:'var(--m-cuff)',ex:[
       cuff('b'),
       ex({id:'b_press',name:'Machine convergente chest press (≤30°)',muscle:'chest',sets:4,repMin:8,repMax:12,rest:120,
-        cue:'Pecs ; axe convergent = pic de contraction, sûr. Inclinaison ≤ 30°. 2e dose hebdo → 8 séries directes de pecs/sem.'}),
+        cue:'Pecs ; axe convergent = pic de contraction, sûr. Inclinaison ≤ 30°. 2e dose hebdo → 11 séries directes de pecs/sem.'}),
       ex({id:'b_pull',name:'Lat pulldown neutre (pause iso) ou seated row',muscle:'back',sets:3,repMin:8,repMax:12,rest:120,cue:'Dos.'}),
       ex({id:'b_reardelt',name:'Reverse pec deck (oiseau)',muscle:'rear',sets:3,repMin:12,repMax:15,load:'léger-modéré',rest:90,shoulder:true,
         cue:'Deltoïde postérieur — priorité santé épaule.',amp:'Jusqu’à l’alignement bras-tronc. NE PAS dépasser derrière le corps.',warn:'Douleur/instabilité en fin de course → réduis l’amplitude.'}),
@@ -568,7 +571,6 @@ var PROGRAM={
       ex({id:'x_pushdown',name:'Extension triceps poulie',muscle:'arms-tri',sets:3,repMin:12,repMax:15,rest:90,cue:'Triceps.'}),
       ex({id:'x_facepull',name:'Face pull',muscle:'rear',sets:3,repMin:15,repMax:20,load:'léger',rest:60,shoulder:true,
         cue:'Coiffe / deltoïde post.',amp:'Au front, coudes hauts, rotation externe.',warn:'Pas d’à-coups.'}),
-      ex({id:'x_plank',name:'Gainage planche',muscle:'core',sets:3,repMin:30,repMax:45,unit:'s',load:'PdC',rest:60,cue:'Core anti-extension.'}),
       ex({id:'x_legraise',name:'Relevés de jambes',muscle:'core',sets:3,repMin:12,repMax:15,load:'PdC',rest:60,cue:'Abdos bas.'}),
     ]},
   ],
@@ -581,8 +583,13 @@ var PROGRAM={
 };
 var EXMAP={},SESSMAP={};
 PROGRAM.sessions.forEach(function(s){SESSMAP[s.id]=s;s.ex.forEach(function(e){EXMAP[e.id]=e;});});
-/* exercices retirés du programme (ex-jambes) : noms conservés pour l'affichage de l'historique */
-var LEGACY_EX={p_legpress:'Presse à cuisses',p_legcurl:'Leg curl',p_calf:'Mollets'};
+/* exercices retirés du programme : noms (+ unité) conservés pour l'affichage de l'historique */
+var LEGACY_EX={
+  p_legpress:{n:'Presse à cuisses'},p_legcurl:{n:'Leg curl'},p_calf:{n:'Mollets'},
+  a_pushupplus:{n:'Push-Up Plus'},a_ohp:{n:'Développé épaules machine'},
+  p_plank:{n:'Gainage planche',u:'s'},x_plank:{n:'Gainage planche',u:'s'},
+  p_yt:{n:'Prone Y-T (banc incliné)'}
+};
 var MUSCLES={chest:'Pecs',back:'Dos',delts:'Épaules',rear:'Delt. post.','arms-tri':'Triceps','arms-bi':'Biceps',legs:'Jambes',core:'Core',cuff:'Coiffe'};
 var MAIN_SESSIONS=['hautA','pull','hautB'];
 
@@ -1123,7 +1130,7 @@ function progCard(id){
 
 /* ===== PROGRAM REF ===== */
 function viewProgram(){
-  var h='<div class="banner" style="margin-top:14px"><span class="ic">'+icon('clipboard',16,2)+'</span><span>Ton programme complet (référence). Split 3 j <b>100 % haut du corps</b> : Poussée / Tirage / Mixte — chaque muscle ≥ 2×/sem, 48h entre sollicitations d’épaule, ≤ 6 séries/muscle/séance. Les jambes, c’est le skate qui s’en charge.</span></div>';
+  var h='<div class="banner" style="margin-top:14px"><span class="ic">'+icon('clipboard',16,2)+'</span><span>Ton programme complet (référence). Split 3 j <b>100 % haut du corps</b> : Poussée / Tirage / Mixte — chaque muscle travaillé ≥ 2×/sem, 48 h entre deux séances qui chargent l’épaule, coiffe des rotateurs en ouverture de chaque séance. Les jambes, c’est le skate qui s’en charge.</span></div>';
   PROGRAM.sessions.forEach(function(s){
     h+='<h2><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:'+s.color+'"></span>'+esc(s.name)+'</h2>';
     h+='<div class="card prog-sess"><div class="muted small" style="margin-bottom:6px">'+esc(s.focus)+' · ~'+estMin(s)+' min</div>';
@@ -1206,8 +1213,8 @@ function sessionModal(en){
   s.ex.forEach(function(e){seen[e.id]=1;exLine(e.id,e.name,e.unit);});
   Object.keys(en.logs).forEach(function(k){
     if(seen[k])return;
-    var e=EXMAP[k];
-    exLine(k,e?e.name:(LEGACY_EX[k]||k),e?e.unit:'reps');
+    var e=EXMAP[k],lg=LEGACY_EX[k];
+    exLine(k,e?e.name:(lg?lg.n:k),e?e.unit:((lg&&lg.u)||'reps'));
   });
   var dlab=new Date(en.dateISO+'T12:00').toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
   var mins=Math.max(1,Math.round((en.durationSec||0)/60));

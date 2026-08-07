@@ -6,6 +6,14 @@ Application web de suivi de séance de musculation — **100 % hors-ligne**, don
 
 Fonctions : programme du jour, timers de repos auto (son + vibration), log des séries, suivi de progression, double progression. Conçu pour un usage sur téléphone en salle.
 
+## v4.1 — programme ajusté (zéro poids de corps, zéro gainage)
+
+- **Lundi (Haut A)** : Push-Up Plus et Développé épaules machine retirés → **Landmine press** (poussée à 45°, pas d'overhead, travaille aussi le dentelé antérieur) et **Écarté poulie basse→haut** (2ᵉ dose de pecs en étirement chargé)
+- **Mercredi (Haut B)** : Gainage planche et Prone Y-T retirés → **Straight-arm pulldown** (grand dorsal en isolation)
+- Gainage également retiré de la séance bonus « Bras + Core »
+- Charge d'épaule inchangée lundi (6 séries deltoïdes, comme avant) ; pecs à 11 séries/semaine
+- L'historique des exercices retirés reste lisible dans le journal (nom + unité conservés)
+
 ## v4.0 — flow de séance « qualité commerciale »
 
 - Zéro re-rendu pendant la séance : cocher/ajouter une série met à jour uniquement ce qui change (aucun flash, aucun saut)
