@@ -625,6 +625,48 @@ var saveT;
 function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
 function saveSoon(){clearTimeout(saveT);saveT=setTimeout(save,400);}
 
+/* ============ LIFE SYNC ============
+ * Mirrors finished sessions to life.n3xa-one.space (Settings > Integrations
+ * shows it as "Muscu Tracker") and pulls back anything missing locally —
+ * recovery if this browser's storage is ever cleared. Best-effort, silent:
+ * localStorage stays the source of truth, the app works fully offline. */
+var LIFE_API='https://life.n3xa-one.space/api/workouts';
+var LIFE_TOKEN='2ff9afb893452c6002c2a64438456270dbaba86608b381b4';
+function exLabel(exId){var e=EXMAP[exId];if(e)return e.name;var leg=LEGACY_EX[exId];if(leg)return leg.n;return exId;}
+function pushSessionToLife(h){
+  var sess=SESSMAP[h.sessionId],sets=[];
+  Object.keys(h.logs).forEach(function(exId){
+    (h.logs[exId]||[]).forEach(function(s,i){
+      if(!s.done)return;
+      sets.push({exerciseName:exLabel(exId),setIndex:i+1,weightKg:num(s.w)||null,reps:parseInt(s.r,10)||null,isBodyweight:false});
+    });
+  });
+  if(!sets.length)return;
+  fetch(LIFE_API,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+LIFE_TOKEN},body:JSON.stringify({
+    externalId:'muscu-'+h.id,
+    performedAt:new Date(h.dateISO+'T12:00:00').toISOString(),
+    sessionName:(sess&&sess.name)||h.sessionId,
+    week:h.week||null,
+    sets:sets,
+    raw:h
+  })}).catch(function(){});
+}
+function pullSessionsFromLife(){
+  fetch(LIFE_API,{headers:{'Authorization':'Bearer '+LIFE_TOKEN}}).then(function(r){return r.json();}).then(function(data){
+    if(!data||!data.sessions)return;
+    var known={};state.history.forEach(function(h){known[h.id]=true;});
+    var added=false;
+    data.sessions.forEach(function(item){
+      var raw=item.raw;
+      if(raw&&raw.id&&!known[raw.id]){state.history.push(raw);known[raw.id]=true;added=true;}
+    });
+    if(added){
+      state.history.sort(function(a,b){return a.dateISO<b.dateISO?-1:a.dateISO>b.dateISO?1:0;});
+      save();render();
+    }
+  }).catch(function(){});
+}
+
 /* ============ HELPERS ============ */
 function $(s,r){return (r||document).querySelector(s);}
 function todayISO(){var d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
@@ -695,8 +737,10 @@ function finishWorkout(){
     if(maxW>0&&prev>0&&maxW>prev)prs.push(e.name+' '+maxW+' kg');
   });
   var dur=Math.round((Date.now()-w.startedAt)/1000),hid='h'+Date.now();
-  state.history.push({id:hid,sessionId:w.sessionId,dateISO:w.dateISO,week:w.week,durationSec:dur,logs:w.logs});
+  var entry={id:hid,sessionId:w.sessionId,dateISO:w.dateISO,week:w.week,durationSec:dur,logs:w.logs};
+  state.history.push(entry);
   state.activeWorkout=null;releaseWake();save();
+  pushSessionToLife(entry);
   showSummary({name:sess.name,dur:dur,setsDone:setsDone,vol:Math.round(vol),prs:prs,hid:hid});
 }
 function cancelWorkout(){state.activeWorkout=null;state.ui.forcePicker=false;releaseWake();save();render();}
@@ -1580,6 +1624,7 @@ Array.prototype.forEach.call(document.querySelectorAll('.ic-wrap'),function(el){
 $('#tbToggle').innerHTML=icon('pause',15,2.4);
 render();
 if(state.activeWorkout)requestWake();
+pullSessionsFromLife();
 /* PWA : hors-ligne + installable (jamais sur les pages de test) */
 if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')&&/(index\.html|\/)$/.test(location.pathname)){
   navigator.serviceWorker.register('./sw.js').catch(function(){});

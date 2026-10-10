@@ -1,10 +1,15 @@
 # Muscu Tracker 🏋️
 
-Application web de suivi de séance de musculation — **100 % hors-ligne**, données stockées en local sur ton appareil (rien sur le serveur).
+Application web de suivi de séance de musculation — **100 % hors-ligne**, données stockées en local sur ton appareil (rien sur le serveur). Chaque séance terminée est aussi reflétée dans [life](https://life.n3xa-one.space) (voir v4.3).
 
 👉 **Ouvrir l'app : https://clementenmodecoder.github.io/muscu-tracker/**
 
 Fonctions : programme du jour, timers de repos auto (son + vibration), log des séries, suivi de progression, double progression. Conçu pour un usage sur téléphone en salle.
+
+## v4.3 — sync avec life
+
+- **Chaque séance terminée est poussée vers life.n3xa-one.space** (Settings → Integrations → Muscu Tracker) en arrière-plan, silencieusement — localStorage reste la source de vérité, zéro dépendance réseau pour utiliser l'app
+- **Au chargement, l'app récupère depuis life les séances absentes en local** (navigateur vidé, nouvel appareil) et les réinsère à l'identique dans l'historique — sync best-effort, jamais bloquante
 
 ## v4.2 — corriger un exercice terminé + gainage de fin de séance
 
