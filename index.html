@@ -638,12 +638,17 @@ function saveSoon(){clearTimeout(saveT);saveT=setTimeout(save,400);}
 var LIFE_API='https://life.n3xa-one.space/api/workouts';
 var LIFE_TOKEN='2ff9afb893452c6002c2a64438456270dbaba86608b381b4';
 function exLabel(exId){var e=EXMAP[exId];if(e)return e.name;var leg=LEGACY_EX[exId];if(leg)return leg.n;return exId;}
+function exIsBodyweight(exId){var e=EXMAP[exId];return !!(e&&/pdc/i.test(e.load||''));}
 function pushSessionToLife(h){
   var sess=SESSMAP[h.sessionId],sets=[];
   Object.keys(h.logs).forEach(function(exId){
-    (h.logs[exId]||[]).forEach(function(s,i){
+    var isBW=exIsBodyweight(exId),setIdx=0;
+    (h.logs[exId]||[]).forEach(function(s){
       if(!s.done)return;
-      sets.push({exerciseName:exLabel(exId),setIndex:i+1,weightKg:num(s.w)||null,reps:parseInt(s.r,10)||null,isBodyweight:false});
+      var weightKg=num(s.w)||null,reps=parseInt(s.r,10)||null;
+      if(weightKg==null&&reps==null)return; // nothing actually logged on this set — skip the ghost badge
+      setIdx++;
+      sets.push({exerciseName:exLabel(exId),setIndex:setIdx,weightKg:weightKg,reps:reps,isBodyweight:isBW});
     });
   });
   if(!sets.length)return Promise.resolve(false);
