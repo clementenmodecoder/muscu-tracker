@@ -620,16 +620,21 @@ function load(){try{var r=localStorage.getItem(KEY);state=r?JSON.parse(r):defSta
   if(!state.ui)state.ui={tab:'workout',forcePicker:false,openEx:null,notes:{}};
   if(!state.ui.notes)state.ui.notes={};
   if(!state.history)state.history=[];
-  if(!state.bodyweight)state.bodyweight=[];}
+  if(!state.bodyweight)state.bodyweight=[];
+  if(!state.lifeSynced)state.lifeSynced={};}
 var saveT;
 function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
 function saveSoon(){clearTimeout(saveT);saveT=setTimeout(save,400);}
 
 /* ============ LIFE SYNC ============
- * Mirrors finished sessions to life.n3xa-one.space (Settings > Integrations
- * shows it as "Muscu Tracker") and pulls back anything missing locally —
- * recovery if this browser's storage is ever cleared. Best-effort, silent:
- * localStorage stays the source of truth, the app works fully offline. */
+ * Mirrors sessions to life.n3xa-one.space (Settings > Integrations shows it
+ * as "Muscu Tracker") and pulls back anything missing locally — recovery if
+ * this browser's storage is ever cleared. Best-effort, silent: localStorage
+ * stays the source of truth, the app works fully offline.
+ * state.lifeSynced tracks which local history ids already made it to life,
+ * so the whole existing history backfills once on first load (not just
+ * sessions finished after this feature shipped), and only ever-still-unsynced
+ * entries (e.g. pushed while offline) are retried on later loads. */
 var LIFE_API='https://life.n3xa-one.space/api/workouts';
 var LIFE_TOKEN='2ff9afb893452c6002c2a64438456270dbaba86608b381b4';
 function exLabel(exId){var e=EXMAP[exId];if(e)return e.name;var leg=LEGACY_EX[exId];if(leg)return leg.n;return exId;}
@@ -641,24 +646,39 @@ function pushSessionToLife(h){
       sets.push({exerciseName:exLabel(exId),setIndex:i+1,weightKg:num(s.w)||null,reps:parseInt(s.r,10)||null,isBodyweight:false});
     });
   });
-  if(!sets.length)return;
-  fetch(LIFE_API,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+LIFE_TOKEN},body:JSON.stringify({
+  if(!sets.length)return Promise.resolve(false);
+  return fetch(LIFE_API,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+LIFE_TOKEN},body:JSON.stringify({
     externalId:'muscu-'+h.id,
     performedAt:new Date(h.dateISO+'T12:00:00').toISOString(),
     sessionName:(sess&&sess.name)||h.sessionId,
     week:h.week||null,
     sets:sets,
     raw:h
-  })}).catch(function(){});
+  })}).then(function(r){return r.ok;}).catch(function(){return false;});
+}
+function pushSessionToLifeAndMark(h){
+  pushSessionToLife(h).then(function(ok){
+    if(!ok)return;
+    if(!state.lifeSynced)state.lifeSynced={};
+    state.lifeSynced[h.id]=true;
+    saveSoon();
+  });
+}
+function backfillSessionsToLife(){
+  if(!state.lifeSynced)state.lifeSynced={};
+  state.history.forEach(function(h){
+    if(!state.lifeSynced[h.id])pushSessionToLifeAndMark(h);
+  });
 }
 function pullSessionsFromLife(){
   fetch(LIFE_API,{headers:{'Authorization':'Bearer '+LIFE_TOKEN}}).then(function(r){return r.json();}).then(function(data){
     if(!data||!data.sessions)return;
+    if(!state.lifeSynced)state.lifeSynced={};
     var known={};state.history.forEach(function(h){known[h.id]=true;});
     var added=false;
     data.sessions.forEach(function(item){
       var raw=item.raw;
-      if(raw&&raw.id&&!known[raw.id]){state.history.push(raw);known[raw.id]=true;added=true;}
+      if(raw&&raw.id&&!known[raw.id]){state.history.push(raw);known[raw.id]=true;state.lifeSynced[raw.id]=true;added=true;}
     });
     if(added){
       state.history.sort(function(a,b){return a.dateISO<b.dateISO?-1:a.dateISO>b.dateISO?1:0;});
@@ -740,7 +760,7 @@ function finishWorkout(){
   var entry={id:hid,sessionId:w.sessionId,dateISO:w.dateISO,week:w.week,durationSec:dur,logs:w.logs};
   state.history.push(entry);
   state.activeWorkout=null;releaseWake();save();
-  pushSessionToLife(entry);
+  pushSessionToLifeAndMark(entry);
   showSummary({name:sess.name,dur:dur,setsDone:setsDone,vol:Math.round(vol),prs:prs,hid:hid});
 }
 function cancelWorkout(){state.activeWorkout=null;state.ui.forcePicker=false;releaseWake();save();render();}
@@ -1624,6 +1644,7 @@ Array.prototype.forEach.call(document.querySelectorAll('.ic-wrap'),function(el){
 $('#tbToggle').innerHTML=icon('pause',15,2.4);
 render();
 if(state.activeWorkout)requestWake();
+backfillSessionsToLife();
 pullSessionsFromLife();
 /* PWA : hors-ligne + installable (jamais sur les pages de test) */
 if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')&&/(index\.html|\/)$/.test(location.pathname)){
