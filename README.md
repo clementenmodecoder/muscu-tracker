@@ -6,6 +6,11 @@ Application web de suivi de séance de musculation — **100 % hors-ligne**, don
 
 Fonctions : programme du jour, timers de repos auto (son + vibration), log des séries, suivi de progression, double progression. Conçu pour un usage sur téléphone en salle.
 
+## v4.3.1 — backfill de l'historique existant
+
+- **Tout l'historique déjà présent en local est poussé vers life au premier chargement**, pas seulement les séances terminées après coup — la v4.3 ne couvrait que le futur
+- Les séances non confirmées synchronisées (ex. poussées hors salle sans réseau) sont retentées à chaque chargement, jamais perdues
+
 ## v4.3 — sync avec life
 
 - **Chaque séance terminée est poussée vers life.n3xa-one.space** (Settings → Integrations → Muscu Tracker) en arrière-plan, silencieusement — localStorage reste la source de vérité, zéro dépendance réseau pour utiliser l'app
