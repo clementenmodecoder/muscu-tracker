@@ -6,6 +6,16 @@ Application web de suivi de séance de musculation — **100 % hors-ligne**, don
 
 Fonctions : programme du jour, timers de repos auto (son + vibration), log des séries, suivi de progression, double progression. Conçu pour un usage sur téléphone en salle.
 
+## v5.0 — programme hypertrophie esthétique (6 mois, 26 semaines)
+
+- **Nouveau split 5 j/sem** : S1 Poussée A, S2 Tirage A, S3 Épaules+Abdos+Avant-bras, S4 Poussée B, S5 Tirage B, + **S6 Épaules+Bras express** en bonus au bloc 3 uniquement. Remplace le split 3 j (Haut A/B/C) + bonus Bras.
+- **26 semaines, 3 blocs de 8 + 2 semaines allégées** (S9, S18) avec RIR qui descend bloc après bloc, au lieu du cycle fixe de 4 semaines. Semaine du programme sélectionnable par bloc dans Réglages.
+- **Objectif hebdo par défaut : 5 séances** (était 3) — migration automatique au premier chargement si tu étais encore sur 3.
+- **Retiré** : shrugs, gainage planche (remplacé par crunch poulie / roue abdominale / relevés lestés), floor press, straight-arm pulldown, curl haltères debout.
+- **Nouveau groupe musculaire** avant-bras (curl inversé, curl poignet en S3).
+- **L'ancien programme (Haut A/B/C, Bras) reste entièrement lisible dans le journal, les modales de séance et la sync life** — il a juste disparu des onglets Séance/Programme.
+- Programme de référence (onglet Programme) réécrit : table de progression par bloc, section « Quand ça bloque », rappel nutrition/suivi (sèche puis maintenance).
+
 ## v4.3.1 — backfill de l'historique existant
 
 - **Tout l'historique déjà présent en local est poussé vers life au premier chargement**, pas seulement les séances terminées après coup — la v4.3 ne couvrait que le futur
