@@ -774,13 +774,15 @@ function pushSessionToLife(h){
       var weightKg=num(s.w)||null,reps=parseInt(s.r,10)||null;
       if(weightKg==null&&reps==null)return; // nothing actually logged on this set — skip the ghost badge
       setIdx++;
-      sets.push({exerciseName:exLabel(exId),setIndex:setIdx,weightKg:weightKg,reps:reps,isBodyweight:isBW,muscleGroup:muscle});
+      sets.push({exerciseName:exLabel(exId),setIndex:setIdx,weightKg:weightKg,reps:reps,isBodyweight:isBW,muscleGroup:muscle,
+        performedAt:s.at?new Date(s.at).toISOString():null});
     });
   });
   if(!sets.length)return Promise.resolve(false);
   return fetch(LIFE_API,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+LIFE_TOKEN},body:JSON.stringify({
     externalId:'muscu-'+h.id,
-    performedAt:new Date(h.dateISO+'T12:00:00').toISOString(),
+    performedAt:new Date(h.startedAt||h.dateISO+'T12:00:00').toISOString(),
+    endedAt:h.endedAt?new Date(h.endedAt).toISOString():null,
     sessionName:(sess&&sess.name)||h.sessionId,
     week:h.week||null,
     sets:sets,
@@ -812,10 +814,14 @@ function pullSessionsFromLife(){
     if(!data||!data.sessions)return;
     if(!state.lifeSynced)state.lifeSynced={};
     var known={};state.history.forEach(function(h){known[h.id]=true;});
-    var added=false;
+    var added=false; /* = au moins un changement local */
     data.sessions.forEach(function(item){
       var raw=item.raw;
-      if(raw&&raw.id&&!known[raw.id]){state.history.push(raw);known[raw.id]=true;state.lifeSynced[raw.id]=true;added=true;}
+      if(!raw||!raw.id)return;
+      if(!known[raw.id]){state.history.push(raw);known[raw.id]=true;state.lifeSynced[raw.id]=true;added=true;return;}
+      /* correction faite côté life (raw.editedAt) : elle remplace la copie locale */
+      var i=state.history.findIndex(function(h){return h.id===raw.id;});
+      if(raw.editedAt&&raw.editedAt>(state.history[i].editedAt||0)){state.history[i]=raw;added=true;}
     });
     if(added){
       state.history.sort(function(a,b){return a.dateISO<b.dateISO?-1:a.dateISO>b.dateISO?1:0;});
@@ -884,6 +890,22 @@ function startWorkout(sid){
   state.ui.forcePicker=false;state.ui.tab='workout';
   save();requestWake();render();window.scrollTo(0,0);
 }
+/* Début/fin réels d'une séance : une séance ouverte la veille et faite le
+ * lendemain (ou terminée des heures après la dernière série) ne doit plus
+ * fausser la date ni la durée — au-delà d'1 h d'écart avec la première /
+ * dernière série horodatée, ce sont les séries qui font foi. */
+var SPAN_SLACK_MS=3600000;
+function workoutSpan(w,finishedAt){
+  var ts=[];Object.keys(w.logs).forEach(function(k){(w.logs[k]||[]).forEach(function(s){if(s.done&&s.at)ts.push(s.at);});});
+  var start=w.startedAt,end=finishedAt;
+  if(ts.length){
+    var first=Math.min.apply(null,ts),last=Math.max.apply(null,ts);
+    if(first-start>SPAN_SLACK_MS)start=first;
+    if(end-last>SPAN_SLACK_MS)end=last;
+  }
+  return {start:start,end:end};
+}
+function isoOf(ms){var d=new Date(ms);return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
 function finishWorkout(){
   var w=state.activeWorkout;if(!w)return;
   var sess=SESSMAP[w.sessionId];
@@ -893,8 +915,9 @@ function finishWorkout(){
     (w.logs[e.id]||[]).forEach(function(s){if(s.done){setsDone++;vol+=num(s.w)*num(s.r);maxW=Math.max(maxW,num(s.w));}});
     if(maxW>0&&prev>0&&maxW>prev)prs.push(e.name+' '+maxW+' kg');
   });
-  var dur=Math.round((Date.now()-w.startedAt)/1000),hid='h'+Date.now();
-  var entry={id:hid,sessionId:w.sessionId,dateISO:w.dateISO,week:w.week,durationSec:dur,logs:w.logs};
+  var span=workoutSpan(w,Date.now()),hid='h'+Date.now();
+  var entry={id:hid,sessionId:w.sessionId,dateISO:isoOf(span.start),week:w.week,durationSec:Math.round((span.end-span.start)/1000),
+    startedAt:span.start,endedAt:span.end,logs:w.logs};
   state.history.push(entry);
   state.activeWorkout=null;releaseWake();save();
   pushSessionToLifeAndMark(entry);
@@ -1671,7 +1694,9 @@ document.addEventListener('click',function(e){
     var row2=a.closest('.set-row'),card2=a.closest('.ex-card'),exId2=card2.dataset.ex,i2=+row2.dataset.set;
     var s=state.activeWorkout.logs[exId2][i2];
     ['w','r','rir'].forEach(function(f2){var el=row2.querySelector('.val[data-field="'+f2+'"]');if(el)s[f2]=el.value;});
-    s.done=!s.done;save();
+    s.done=!s.done;
+    if(s.done)s.at=Date.now();else delete s.at; /* horodatage de chaque série validée */
+    save();
     row2.classList.toggle('done',s.done);
     var becameFull=patchWorkout(exId2);
     if(s.done){
